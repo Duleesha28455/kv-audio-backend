@@ -25,7 +25,7 @@ app.use ((req,res,next)=>{
 
         console.log(token);
 
-        jwt.verify(token,"dulee123",
+        jwt.verify(token,process.env.JWT_SECRET,
             (err,decoded)=>{
                 if(!err){
                     console.log(decoded);
