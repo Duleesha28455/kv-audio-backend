@@ -20,21 +20,22 @@ export function addReview(req,res){
     });
 
 }
-export function getReviews(req,res){
+export  async function getReviews(req,res){
     const user=req.user;
-    if(user==null || user.role != "admin"){
-          Review.find({isApproved:true}).then((reviews)=>{
-            res.json(reviews);
-          })
-          return
-
-    }
+try{
     if(user.role=="admin"){
-        Review.find().then((reviews)=>{
-            res.json(reviews);
-            })
-            
+    const reviews=await Review.find();
+    res.json(reviews);
+    }else{
+        const reviews=await Review.find().where("user").equals(user._id);
+        res.json(reviews);
     }
+    
+}
+catch(e){
+    res.status(500).json({error:e.message});
+    }
+    
 }
 export function deleteReview (req,res){
     const email=req.params.email;
